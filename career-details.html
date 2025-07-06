@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Career Details</title>
+  <style>
+   body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 720px;
+  margin: 30px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 100%);
+  color: #222;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+ #pdf-container, #result-section {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    h2 {
+      color: #34495e;
+      margin-top: 30px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 5px;
+    }
+    p {
+      line-height: 1.6;
+      font-size: 1.1em;
+      margin-top: 0;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+    ul li {
+      background: #fff;
+      margin: 8px 0;
+      padding: 12px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 1em;
+    }
+    .label {
+      font-weight: 600;
+      color: #2980b9;
+    }
+    a.back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #2980b9;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 1.1em;
+      transition: color 0.3s;
+    }
+    a.back-link:hover {
+      color: #1c5980;
+      text-decoration: underline;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #45a049;
+}
+#result-section {
+  width: 180mm;             /* width inside A4 */
+  min-height: 277mm;        /* A4 height (297mm) minus margins */
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  display: block;
+}
+  </style>
+</head>
+<body>
+
+  <div id="pdf-container" style="margin:0; padding:0;">
+  <div id="result-section" style="margin:0; padding:0;">
+    <h1 id="career-name">Loading...</h1>
+
+    <div class="section">
+      <h2>Description</h2>
+      <p id="career-description">Loading...</p>
+    </div>
+
+    <div class="section">
+      <h2>Career Details</h2>
+      <ul id="career-info-list">
+        <!-- Cost, Years, Experience, Skills -->
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Recommended Colleges</h2>
+      <ul id="colleges-list"></ul>
+    </div>
+
+    <div class="section">
+      <h2>Suggested Courses</h2>
+      <ul id="courses-list"></ul>
+    </div>
+  </div>
+  </div>
+
+  <div class="btn-container">
+    <a href="result.html" class="back-link">← Back to Suggestions</a>
+    <button id="downloadBtn" class="btn">Download</button>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    // Get career from URL query parameter
+    function getCareerFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('career');
+    }
+
+    const career = getCareerFromUrl();
+
+    // Detailed career info
+    const careerDetails = {
+ // --- Technology ---
+ //high school
+  "Technical Support": {
+    description: "Technical Support specialists assist users with hardware and software issues, troubleshooting problems and providing solutions.",
+    cost: "Certificate courses or diplomas typically cost $1,000 - $5,000.",
+    years: "Usually 6 months to 1 year for certification or diploma.",
+    experience: "Entry-level positions often available with certification.",
+    skills: ["Troubleshooting", "Communication", "Basic Networking", "Customer Service"],
+    colleges: ["Community Colleges", "Technical Institutes"],
+    courses: ["IT Support Specialist Certification", "CompTIA A+"]
+  },
+  "IT Assistant":{
+    description: "IT Assistants support the IT department by maintaining hardware and software systems, troubleshooting technical issues, and assisting in network management.",
+        cost: "$1,000 to $5,000 (Certificate courses)",
+        years: "6 months to 1 year",
+        experience: "Entry-level positions available post-certification",
+        skills: ["Basic networking", "Troubleshooting", "Communication", "Reporting"],
+        colleges: ["Community Colleges", "Technical Institutes"],
+        courses: ["CompTIA A+", "IT Support Specialist Certification"]
+  },
+  "Computer Operator":{
+       description: "Computer Operators manage and monitor computer systems, ensuring efficient operation and addressing any issues that arise during processing.",
+        cost: "$10,000 to $20,000 (Associate degree)",
+        years: "2 years",
+        experience: "Entry-level roles with associate degree or experience",
+        skills: ["System monitoring", "Problem-solving", "Time management"],
+        colleges: ["Community Colleges", "Technical Institutes"],
+        courses: ["Associate Degree in Information Systems", "Computer Operations Certification"]
+      },
+  //diploma
+  "Web Developer": {
+    description: "Web Developers design and build websites using coding languages like HTML, CSS, and JavaScript, creating functional and appealing web pages.",
+    cost: "Diploma or certificate courses cost around $5,000 - $15,000; degree programs more expensive.",
+    years: "Diploma courses typically 1-2 years; Bachelor’s 3-4 years.",
+    experience: "Entry-level jobs after diploma or degree; internships beneficial.",
+    skills: ["HTML", "CSS", "JavaScript", "Responsive Design", "Version Control (Git)"],
+    colleges: ["IITs (India)", "State Universities", "Private Institutes"],
+    courses: ["Diploma in Web Development", "BSc in Computer Science", "Full Stack Developer Bootcamp"]
+  },
+  "Junior Programmer":{
+description: "Junior Programmers assist in developing and maintaining software applications, writing code, and debugging programs under supervision.",
+        cost: "$5,000 to $15,000",
+        years: "1 to 2 years",
+      experience: "Internships or project experience beneficial",
+        skills: ["C++", "Java", "SDLC", "Debugging"],
+        colleges: ["Technical Institutes", "Community Colleges"],
+        courses: ["Diploma in Computer Programming", "Software Development Bootcamp"]
+  },
+  "QA Tester":{
+    description: "QA Testers evaluate software applications to identify bugs and ensure they meet quality standards before release.",
+        cost: "$2,000 to $5,000",
+        years: "6 months to 1 year",
+        experience: "Entry-level roles post-certification; internships helpful",
+        skills: ["Attention to detail", "Testing tools", "Software development knowledge"],
+        colleges: ["Online Platforms", "Technical Institutes"],
+        courses: ["ISTQB Certification", "Certified Software Tester (CSTE)"]
+      
+  },
+  //Bachelor's Degree
+  "Software Engineer": {
+    description: "Software Engineers design, develop, test, and maintain software applications and systems. They solve complex problems by writing efficient code and collaborating with cross-functional teams.",
+    cost: "Bachelor’s degrees range from $40,000 to $100,000 depending on university.",
+    years: "Typically 4 years for Bachelor's; 1-2 additional years for Master's or certifications.",
+    experience: "Entry-level after graduation; higher roles require 2-5 years experience.",
+    skills: ["Programming (Java, Python, C++)", "Algorithms", "Version Control", "Team Collaboration"],
+    colleges: ["MIT (USA)", "Stanford University", "IIT Bombay (India)", "University of Cambridge", "NUS (Singapore)"],
+    courses: ["B.Tech in Computer Science", "Certified Java Programmer", "Full Stack Developer Bootcamp"]
+  },
+  "Data Analyst":{
+     description: "Data Analysts collect, process, and analyze data to support business decision-making.",
+        cost: "$20,000 to $60,000 (degree) / $2,000 to $5,000 (certification)",
+        years: "2 to 4 years",
+        experience: "Entry to mid-level with internship or projects",
+        skills: ["SQL", "Excel", "Tableau", "Python", "Statistics"],
+        colleges: ["Harvard", "UC Berkeley", "IIM Bangalore", "LSE", "NUS"],
+        courses: ["Bachelor's in Statistics", "Google Data Analytics Certificate"]
+  },
+  "Cybersecurity Specialist": {
+    description: "Cybersecurity Specialists safeguard an organization’s information systems by implementing security measures, monitoring networks for breaches, and responding to cyber threats. They need to be vigilant, detail-oriented, and constantly updated on the latest security trends.",
+    cost: "Degree programs typically cost $30,000 and above; certifications range from $300 to $2,000.",
+    years: "Usually 2-4 years for a degree plus additional time for certifications.",
+    experience: "Mid to senior-level experience recommended, though entry roles exist.",
+    skills: ["Network Security", "Risk Assessment", "Ethical Hacking", "Incident Response", "Security Protocols", "Cryptography"],
+    colleges: ["Carnegie Mellon University (USA)", "IIT Delhi (India)", "University of Oxford (UK)", "Technische Universität München (Germany)", "National University of Singapore"],
+    courses: ["Bachelor’s in Cybersecurity", "Certified Information Systems Security Professional (CISSP)", "Ethical Hacking Certification", "Master’s in Information Security", "CompTIA Security+"]
+  },
+  // Master's Degree
+  "AI Engineer": {
+    description: "AI Engineers develop machine learning models and intelligent systems that automate processes and analyze data for decision-making.",
+    cost: "Master’s programs or certifications typically cost $30,000 - $70,000.",
+    years: "4 years Bachelor’s + 2 years Master’s or specialized certifications.",
+    experience: "Mid-level experience with AI projects recommended.",
+    skills: ["Machine Learning", "Python", "Data Modeling", "Deep Learning Frameworks"],
+    colleges: ["Carnegie Mellon University", "IIT Delhi", "University of Toronto", "ETH Zurich"],
+    courses: ["Master’s in AI", "Machine Learning Certification", "Data Science Bootcamp"]
+  },
+   "Solutions Architect": {
+    description: "Solutions Architects design and implement complex IT solutions tailored to business needs.",
+    cost: "$30,000 to $70,000",
+    years: "6 years (Bachelor + Master)",
+    experience: "5+ years in IT, software, or systems architecture",
+    skills: ["Cloud Computing", "System Design", "Business Analysis"],
+    colleges:  ["Coursera", "LinkedIn Learning", "Universities offering Master’s in IT"],
+    courses: ["AWS Certified Solutions Architect", "TOGAF Certification"]
+  },
+ "Tech Lead" : {
+    description: "Tech Leads manage development teams, ensure code quality, and guide technical direction.",
+    cost: "$30,000 to $70,000",
+    years:  "6 years (Bachelor + Master)",
+    experience:  "5+ years in software development and leadership",
+    skills:["Leadership", "Agile", "Software Architecture"],
+    colleges:  ["Ironhack", "LinkedIn Learning", "Universities with CS Master's"],
+    courses:["Agile Certification", "Master’s in Software Engineering"]
+  },
+  // --- Health ---
+  //high school
+  "Medical Assistant": {
+    description: "Medical Assistants support healthcare providers by managing administrative and clinical tasks in clinics and hospitals.",
+    cost: "Diploma or certificate programs cost $5,000 - $15,000.",
+    years: "Usually 1-2 years diploma or certification.",
+    experience: "Entry-level positions after certification.",
+    skills: ["Patient Care", "Medical Terminology", "Basic Clinical Skills"],
+    colleges: ["Community Colleges", "Medical Institutes"],
+    courses: ["Diploma in Medical Assistance", "Certified Medical Assistant Program"]
+  },
+   "Pharmacy Clerk": {
+    description: "Pharmacy Clerks assist pharmacists with clerical duties like stocking shelves and handling customer transactions.",
+    cost: "Minimal; usually employer-trained or short-term training <$2,000.",
+    years:  "0-6 months training.",
+    experience: "Entry-level; often requires only a high school diploma.",
+    skills: ["Customer Service", "Inventory Management", "Basic Math"],
+    colleges:  ["On-the-job training or community programs"],
+    courses:["Pharmacy Clerk Training Program (optional)"]
+  },
+  //diploma
+  "Nursing Assistant":{
+      description:  "Nursing Assistants provide basic care under the supervision of nursing staff.",
+    cost: "$1,000 - $4,000 for CNA certification.",
+    years:  "4-12 months certification program.",
+    experience: "Entry-level roles after certification.",
+    skills:["Patient Care", "Mobility Assistance", "Vital Signs Monitoring"],
+    colleges:   ["Red Cross Training", "Local Community Colleges"],
+    courses: ["Certified Nursing Assistant (CNA)"]
+  },
+  "Lab Technician":{ 
+     description: "Lab Technicians perform tests and procedures to help diagnose diseases.",
+    cost: "$5,000 - $20,000 for diploma or associate degree.",
+    years:   "1-2 years diploma or associate degree.",
+    experience:  "Internships preferred; entry-level available post-training.",
+    skills:["Laboratory Skills", "Attention to Detail", "Data Recording"],
+    colleges:  ["Community Colleges", "Vocational Institutes"],
+    courses: ["Diploma in Medical Laboratory Technology (DMLT)", "Associate Degree in Lab Tech"]
+
+  },
+  //Bachelor's Degree
+  "Nurse": {
+    description: "Nurses provide patient care, administer medications, and support doctors in healthcare settings.",
+    cost: "Bachelor’s degrees range $20,000 - $60,000.",
+    years: "3-4 years Bachelor’s degree.",
+    experience: "Entry-level jobs after degree; internships or residencies recommended.",
+    skills: ["Patient Care", "Medication Administration", "Communication"],
+    colleges: ["Johns Hopkins University", "AIIMS (India)", "University of Toronto"],
+    courses: ["Bachelor of Science in Nursing (BSN)", "Nursing Certification"]
+  },
+  "Nutritionist":{
+  description: "Nutritionists advise on diet and nutrition for better health and disease prevention.",
+    cost: "$15,000 - $50,000 for bachelor's degree.",
+    years:  "3-4 years Bachelor’s degree.",
+    experience: "Entry-level jobs available post-degree; certifications enhance opportunities.",
+    skills:["Diet Planning", "Health Counseling", "Nutritional Analysis"],
+    colleges: ["University of California Davis", "University of Sydney", "SNDT Women's University"], 
+    courses:["BSc in Nutrition and Dietetics", "Registered Dietitian Certification"]
+  },
+  "Physiotherapist": {
+    description: "Physiotherapists help patients improve movement and manage pain after injuries or illnesses.",
+    cost: "$20,000 - $60,000 for bachelor’s degree.",
+    years: "4-5 years Bachelor’s degree in Physiotherapy.",
+    experience: "Internship or clinical experience required.",
+    skills: ["Manual Therapy", "Exercise Prescription", "Patient Assessment"],
+    colleges: ["University of Melbourne", "McGill University", "AIIMS"],
+    courses: ["Bachelor of Physiotherapy (BPT)"]
+  },
+  //Master's Degree
+  "Doctor": {
+    description: "Doctors diagnose illnesses, prescribe treatments, and manage patient care.",
+    cost: "$100,000 - $300,000 including medical school.",
+    years: "8-12 years (Bachelor + MBBS/MD + Residency).",
+    experience: "Extensive training through internships and residencies.",
+    skills: ["Medical Knowledge", "Diagnostic Skills", "Patient Care", "Surgical Skills"],
+    colleges: ["Harvard Medical School", "AIIMS", "University of Oxford","University of Cambridge"],
+    courses: ["MBBS", "Doctor of Medicine (MD)", "Residency Programs"]
+  },
+  "Public Health Analyst": {
+    description: "Public Health Analysts study population health data and develop strategies to improve community health outcomes.",
+    cost: "Master’s degrees usually $20,000 - $50,000.",
+    years: "5-6 years (Bachelor + Master in Public Health).",
+    experience: "Entry-level roles possible with relevant education.",
+    skills: ["Epidemiology", "Data Analysis", "Health Policy"],
+    colleges: ["Johns Hopkins University", "London School of Hygiene & Tropical Medicine"],
+    courses: ["MPH (Master of Public Health)", "Health Data Analytics"]
+  },
+   "Medical Researcher": {
+    description: "Medical Researchers study diseases, develop treatments, and conduct clinical trials.",
+    cost: "$30,000 - $100,000 depending on program and location.",
+    years: "6-8 years (Bachelor + Master's or PhD).",
+    experience: "Research projects and lab internships essential.",
+    skills: ["Scientific Research", "Lab Techniques", "Critical Thinking"],
+    colleges: ["Stanford University", "Karolinska Institute", "Oxford University"],
+    courses: ["Master in Biomedical Research", "PhD in Medical Sciences"]
+  },
+
+  // --- Art ---
+  //high school
+  "Craft Maker": {
+  description: "Craft Makers design and create handmade items using various materials like wood, fabric, paper, beads, and clay. They combine creativity and skill to produce unique decorative or functional products, often selling them through markets, shops, or online platforms. Craft Makers may specialize in areas such as pottery, jewelry, textiles, or home decor.",
+  cost: "Costs vary widely depending on training and materials. Workshops or diploma courses typically range from $500 to $5,000. Many artisans are self-taught or learn through apprenticeships.",
+  years: "No formal degree required; training can take from a few months to 2 years depending on specialization.",
+  experience: "Portfolio of work and practical experience is essential. Starting with small projects and selling crafts helps build skills and reputation.",
+  skills: ["Creativity", "Manual Dexterity", "Attention to Detail", "Material Knowledge", "Design Skills", "Basic Business and Marketing"],
+  colleges: ["Community Art Centers", "Craft Schools", "Vocational Institutes"],
+  courses: ["Diploma in Handicrafts", "Certificate in Textile Design", "Workshops in Pottery and Sculpture", "Online Craft Courses"]
+},
+
+  "Freelance Artist": {
+    description: "Freelance Artists create original artwork for clients, including paintings, illustrations, and digital art.",
+    cost: "Variable, mostly self-taught or short courses.",
+    years: "No formal education required but 1-3 years art courses helpful.",
+    experience: "Portfolio and experience crucial for success.",
+    skills: ["Drawing", "Creativity", "Digital Tools (Photoshop, Illustrator)"],
+    colleges: ["Art Schools", "Online Art Courses"],
+    courses: ["Diploma in Fine Arts", "Digital Illustration Courses"]
+  },
+  //diploma
+  "Graphic Designer": {
+    description: "Graphic Designers develop visual content for print and digital media, using design software to communicate ideas effectively.",
+    cost: "Diploma and degree programs range from $5,000 - $30,000.",
+    years: "1-4 years depending on course.",
+    experience: "Portfolio and internships help entry.",
+    skills: ["Adobe Creative Suite", "Typography", "Branding", "Layout Design"],
+    colleges: ["Rhode Island School of Design", "National Institute of Design (India)"],
+    courses: ["Bachelor’s in Graphic Design", "Certificate in Visual Communication"]
+  },
+  "Illustrator":{
+     description: "Illustrators create visual representations for books, advertisements, media, and digital platforms. They work both digitally and traditionally.",
+    cost: "Diploma or degree courses range $5,000 - $20,000.",
+    years: "1-3 years diploma or art school program.",
+    experience: "Internships and freelance projects build experience.",
+    skills: ["Sketching", "Adobe Illustrator", "Visual Storytelling", "Concept Art"],
+    colleges: ["Savannah College of Art and Design", "National Institute of Design (India)"],
+    courses: ["Diploma in Illustration", "Bachelor of Fine Arts", "Digital Illustration Certification"]
+  },
+  //Bachelor's Degree
+  "Animator": {
+    description: "Animators create animated sequences for movies, video games, and advertisements using specialized software.",
+    cost: "Degree or diploma programs cost $10,000 - $40,000.",
+    years: "2-4 years depending on course.",
+    experience: "Internships and demo reels important.",
+    skills: ["3D Modeling", "Animation Software (Maya, Blender)", "Storytelling"],
+    colleges: ["California Institute of the Arts", "Animschool"],
+    courses: ["Bachelor’s in Animation", "Certificate in 3D Animation"]
+  },
+  "Art Director": {
+    description: "Art Directors oversee the visual style and artistic direction of publications, advertising, movies, or product packaging. They manage creative teams to ensure a cohesive vision.",
+    cost: "Bachelor’s or Master’s degree typically costs $30,000 - $70,000.",
+    years: "4 years undergraduate, additional 1-2 years for Master’s.",
+    experience: "5+ years in creative roles before promotion to director level.",
+    skills: ["Visual Design", "Leadership", "Creative Direction", "Brand Strategy", "Team Management"],
+    colleges: ["School of Visual Arts", "Parsons School of Design", "IIT Bombay – IDC"],
+    courses: ["Bachelor of Fine Arts", "Master’s in Art Direction", "Creative Leadership Courses"]
+  },
+  "Fine Artist": {
+    description: "Fine Artists create original works of art such as paintings, sculptures, and installations to express ideas or emotions. They may exhibit in galleries or sell their work independently.",
+    cost: "Bachelor’s or MFA programs range from $10,000 - $50,000. Self-study and residencies are also common.",
+    years: "3-4 years Bachelor’s, optional 2 years Master’s in Fine Arts.",
+    experience: "Strong portfolio and regular exhibitions are key. Artist residencies and gallery representation help career growth.",
+    skills: ["Drawing", "Painting", "Sculpting", "Creativity", "Visual Storytelling"],
+    colleges: ["Royal College of Art", "Yale School of Art", "Sir J.J. School of Art (India)"],
+    courses: ["Bachelor of Fine Arts (BFA)", "Master of Fine Arts (MFA)", "Art Residencies and Studio Programs"]
+  },
+  //Master's Degree
+   "Museum Curator": {
+    description: "Museum Curators manage collections of artwork and artifacts. They plan exhibitions, acquire pieces, and conduct research for museums or galleries.",
+    cost: "Master’s degree programs typically cost $20,000 - $50,000.",
+    years: "4 years Bachelor's + 2 years Master’s.",
+    experience: "Internships or assistant curator roles are beneficial before promotion.",
+    skills: ["Art History", "Collection Management", "Research", "Curation", "Public Engagement"],
+    colleges: ["University of Oxford", "NYU Institute of Fine Arts", "Jawaharlal Nehru University"],
+    courses: ["Master’s in Museum Studies", "MA in Art History", "Diploma in Heritage Management"]
+  },
+  "Art Professor": {
+    description: "Art Professors teach students about art theory, techniques, and history in universities and art schools. They often continue to produce and exhibit their own artwork.",
+    cost: "Master’s or PhD programs typically cost $20,000 - $60,000.",
+    years: "4 years Bachelor's + 2-5 years graduate study.",
+    experience: "Strong portfolio, teaching experience, and exhibitions required.",
+    skills: ["Art Practice", "Teaching", "Research", "Art Criticism"],
+    colleges: ["Yale School of Art", "J.J. School of Art", "Royal College of Art"],
+    courses: ["Master of Fine Arts (MFA)", "PhD in Art Education", "Teaching Credential Programs"]
+  },
+  "Senior Art Consultant": {
+    description: "Senior Art Consultants advise clients on art acquisitions, investments, and curation. They work with galleries, private collectors, and corporations, combining art expertise with business strategy.",
+    cost: "Bachelor’s and Master’s degrees can cost $20,000 - $60,000, often in Art History, Arts Management, or Business.",
+    years: "4 years Bachelor's + 2 years Master’s or equivalent industry experience.",
+    experience: "5+ years in the art industry required, with proven sales and consulting experience.",
+    skills: ["Art Market Knowledge", "Negotiation", "Curation", "Client Relations", "Valuation and Appraisal"],
+    colleges: ["Sotheby’s Institute of Art", "Christie’s Education", "New York University (Art Business)"],
+    courses: ["MA in Art Business", "Art Appraisal and Valuation Certification", "Curatorial Studies"]
+  },
+
+  // --- Business ---
+  //high school
+  "Sales Assistant": {
+    description: "Sales Assistants help customers find products, process transactions, and maintain a clean store environment. They are key to delivering a positive shopping experience.",
+    cost: "Typically no formal education costs; short training or retail courses may cost $100 - $500.",
+    years: "Training may take a few weeks to 6 months.",
+    experience: "No experience required; entry-level role with on-the-job training.",
+    skills: ["Customer Service", "Product Knowledge", "Communication", "Point-of-Sale Systems"],
+    colleges: ["Vocational Schools", "Community Colleges"],
+    courses: ["Retail Sales Certificate", "Customer Service Training"]
+  },
+  "Cashier": {
+    description: "Cashiers handle payments, issue receipts, and assist customers during checkout in retail or food establishments.",
+    cost: "No formal education cost; short vocational training optional.",
+    years: "Training usually under 3 months.",
+    experience: "Entry-level job; no prior experience required.",
+    skills: ["Attention to Detail", "Basic Math", "Customer Interaction", "Time Management"],
+    colleges: ["Local Community Colleges", "Training Institutes"],
+    courses: ["Cashier Training Program", "Retail Operations Course"]
+  },
+  //diploma
+   "Junior Assistant": {
+    description: "Junior Assistants provide clerical support within departments, assisting with paperwork, scheduling, and internal coordination.",
+    cost: "Diploma programs range from $1,000 to $5,000.",
+    years: "1-2 years for a diploma or certification.",
+    experience: "Entry-level; internships preferred but not mandatory.",
+    skills: ["Office Software (MS Office)", "Filing and Organization", "Communication", "Administrative Support"],
+    colleges: ["Community Colleges", "Polytechnic Institutes"],
+    courses: ["Diploma in Office Administration", "Certificate in Business Support"]
+  },
+  "HR Assistant": {
+    description: "HR Assistants support HR departments in recruitment, onboarding, record-keeping, and employee relations.",
+    cost: "Diploma programs typically cost $2,000 - $6,000.",
+    years: "1-2 years diploma or certification course.",
+    experience: "Entry-level role; internship experience is helpful.",
+    skills: ["Data Entry", "Communication", "Record Management", "Basic Labor Law Knowledge"],
+    colleges: ["Community Colleges", "Business Schools"],
+    courses: ["Diploma in Human Resource Management", "HR Certification Programs"]
+  },
+  //Bachelor's Degree
+ "Marketing Executive": {
+    description: "Marketing Executives develop campaigns, conduct market research, and promote products or services to target audiences.",
+    cost: "Bachelor’s degrees cost $20,000 - $60,000.",
+    years: "Typically 3-4 years for a Bachelor's degree.",
+    experience: "Entry-level with relevant degree or internship.",
+    skills: ["Market Research", "Digital Marketing", "Communication", "SEO", "Advertising"],
+    colleges: ["University of Pennsylvania (Wharton)", "IIM Ahmedabad", "University of Melbourne"],
+    courses: ["BBA in Marketing", "Bachelor of Business Administration", "Digital Marketing Certification"]
+  },
+ 
+  "Business Analyst": {
+    description: "Business Analysts analyze business needs, processes, and systems to recommend solutions that improve efficiency.",
+    cost: "Certifications $2,000 - $6,000; degree programs vary.",
+    years: "1-4 years depending on education.",
+    experience: "Experience in business or IT helpful.",
+    skills: ["Data Analysis", "Requirements Gathering", "Communication"],
+    colleges: ["Wharton School", "Indian School of Business"],
+    courses: ["CBAP Certification", "Business Analytics Masters"]
+  },
+   "Operations Manager": {
+    description: "Operations Managers oversee production, logistics, and day-to-day processes to ensure organizational efficiency.",
+    cost: "Bachelor’s degree ranges from $20,000 - $60,000.",
+    years: "3-4 years for a degree; MBA adds 2 years.",
+    experience: "3+ years experience in operations or management roles.",
+    skills: ["Leadership", "Process Optimization", "Project Management", "Strategic Planning"],
+    colleges: ["INSEAD", "IIM Calcutta", "University of Michigan"],
+    courses: ["BBA in Operations Management", "MBA", "Six Sigma Certification"]
+  },
+  //Master's Degree
+  "Business Strategist": {
+    description: "Business Strategists analyze market trends, set long-term goals, and create actionable plans to grow a company.",
+    cost: "Master’s or MBA programs typically cost $30,000 - $100,000.",
+    years: "4 years Bachelor's + 2 years MBA.",
+    experience: "5+ years in business development or strategic roles.",
+    skills: ["Strategic Thinking", "Competitive Analysis", "Financial Forecasting", "Leadership"],
+    colleges: ["Harvard Business School", "IIM Ahmedabad", "London Business School"],
+    courses: ["MBA in Strategy", "Executive Program in Business Strategy"]
+  },
+  "Management Consultant": {
+    description: "Management Consultants help businesses improve performance through analysis, strategic planning, and restructuring.",
+    cost: "MBA programs can cost between $40,000 - $120,000.",
+    years: "6+ years (Bachelor + MBA + experience).",
+    experience: "3-5 years business experience required; consulting firms often hire post-MBA.",
+    skills: ["Analytical Thinking", "Communication", "Problem-Solving", "Stakeholder Management"],
+    colleges: ["Wharton School", "INSEAD", "IIM Bangalore"],
+    courses: ["MBA in Management Consulting", "Strategy Consulting Bootcamps"]
+  },
+  "Finance Director": {
+    description: "Finance Directors oversee a company’s financial operations, planning, budgeting, and reporting, ensuring financial health and compliance.",
+    cost: "Advanced degrees cost $40,000 - $100,000; CPA/CFA certifications add $1,000 - $5,000.",
+    years: "Bachelor’s + Master’s (or MBA) = 5-6 years total.",
+    experience: "10+ years in finance, accounting, or related roles.",
+    skills: ["Financial Planning", "Budgeting", "Accounting", "Leadership", "Compliance"],
+    colleges: ["University of Chicago (Booth)", "IIM Calcutta", "Oxford (Said Business School)"],
+    courses: ["MBA in Finance", "Chartered Financial Analyst (CFA)", "Certified Public Accountant (CPA)"]
+  },
+
+  // --- Law ---
+  //high school
+   "Court Clerk": {
+    description: "Court Clerks assist judges by managing case files, handling court records, and maintaining courtroom procedures.",
+    cost: "Minimal; some may complete short certificate programs costing $500 - $2,000.",
+    years: "Training or certificate can be completed in less than 1 year.",
+    experience: "Entry-level; clerical or administrative experience helpful.",
+    skills: ["Record Keeping", "Organization", "Legal Terminology", "Communication"],
+    colleges: ["Community Colleges", "Vocational Schools"],
+    courses: ["Court Clerk Certificate", "Legal Office Administration"]
+  },
+  "Legal Assistant": {
+    description: "Legal Assistants support lawyers by preparing documents, managing files, and conducting basic legal research.",
+    cost: "Training programs range from $1,000 - $5,000.",
+    years: "6 months to 1 year certification or associate degree.",
+    experience: "No experience required for entry; legal office exposure helpful.",
+    skills: ["Document Preparation", "Legal Research", "Time Management", "Confidentiality"],
+    colleges: ["Community Colleges", "Legal Training Institutes"],
+    courses: ["Legal Assistant Certificate", "Introduction to Legal Systems"]
+  },
+  //diploma
+
+  "Paralegal": {
+    description: "Paralegals assist lawyers by researching legal precedents, preparing documents, and organizing case files. They help ensure the smooth operation of legal services but do not provide legal advice themselves.",
+    cost: "Certificate or diploma programs typically cost $2,000 - $10,000.",
+    years: "Usually 1-2 years for certification or diploma.",
+    experience: "Entry-level roles after certification; internships valuable.",
+    skills: ["Legal Research", "Documentation", "Attention to Detail", "Communication"],
+    colleges: ["Community Colleges", "Legal Institutes"],
+    courses:["Paralegal Certificate Program", "Diploma in Legal Studies"]
+  },
+  "Document Reviewer": {
+    description: "Document Reviewers examine legal documents for relevance and confidentiality during litigation and investigations.",
+    cost: "Paralegal or legal assistant diploma often required.",
+    years: "1-2 years diploma or related certification.",
+    experience: "Some legal or document management experience preferred.",
+    skills: ["Attention to Detail", "Legal Compliance", "Data Entry", "Confidentiality"],
+    colleges: ["Community Colleges", "Legal Institutes"],
+    courses: ["Document Review Training", "Paralegal Technology Program"]
+  },
+  //Bachelor's Degree
+   "Legal Analyst": {
+    description: "Legal Analysts support law firms or corporations by researching laws, drafting reports, and analyzing case trends.",
+    cost: "Bachelor’s degree costs between $20,000 - $60,000.",
+    years: "3-4 years Bachelor's degree in Law, Political Science, or related fields.",
+    experience: "Internships or junior legal roles are advantageous.",
+    skills: ["Legal Research", "Report Writing", "Critical Thinking", "Regulatory Analysis"],
+    colleges: ["University of California, Berkeley", "National Law University (India)", "University of Oxford"],
+    courses: ["BA in Legal Studies", "Bachelor of Laws (LLB)", "Pre-Law Program"]
+  },
+  "Compliance Officer": {
+    description: "Compliance Officers ensure organizations follow laws and internal policies through audits and education.",
+    cost: "Bachelor's degree ranges from $20,000 - $50,000; certifications may cost $2,000 - $5,000.",
+    years: "3-4 years for a Bachelor's degree.",
+    experience: "2-3 years in legal, risk, or regulatory roles preferred.",
+    skills: ["Regulatory Knowledge", "Risk Assessment", "Communication", "Policy Implementation"],
+    colleges: ["London School of Economics", "Georgetown University", "University of Melbourne"],
+    courses: ["BBA in Compliance Management", "Law & Ethics Certification", "Certified Compliance & Ethics Professional (CCEP)"]
+  },
+  //Master's Degree
+  "Lawyer": {
+    description: "Lawyers represent clients in legal matters, including trials, negotiations, and document drafting.",
+    cost: "Bachelor’s + Law degree costs $50,000 - $150,000+ total.",
+    years: "3-4 years Bachelor's + 3 years JD or LLB.",
+    experience: "Internships or clerkships required; bar exam certification mandatory.",
+    skills: ["Legal Reasoning", "Advocacy", "Negotiation", "Writing"],
+    colleges: ["Harvard Law School", "Yale Law School", "National Law School of India University (NLSIU)"],
+    courses: ["Juris Doctor (JD)", "Bachelor of Laws (LLB)", "Bar Exam Preparation"]
+  },
+  "Judge": {
+    description: "Judges preside over court cases, interpret laws, and deliver rulings and sentences.",
+    cost: "Bachelor’s + Law degree + extensive legal experience; law education costs $50,000 - $150,000+.",
+    years: "7+ years of education and 10+ years of legal practice.",
+    experience: "Extensive; often appointed after long legal careers.",
+    skills: ["Legal Interpretation", "Impartiality", "Decision-Making", "Courtroom Management"],
+    colleges: ["Stanford Law School", "University of Cambridge", "NALSAR University (India)"],
+    courses: ["JD or LLB", "Judicial Services Exam", "Advanced Legal Studies"]
+  },
+  "Legal Advisor": {
+    description: "Legal Advisors provide counsel to companies or individuals on legal rights, contracts, and regulatory issues.",
+    cost: "Bachelor’s + Law degree; costs $50,000 - $120,000.",
+    years: "6-7 years education (Bachelor + Law).",
+    experience: "3-5 years in legal practice or corporate law preferred.",
+    skills: ["Legal Counsel", "Contract Law", "Compliance", "Communication"],
+    colleges: ["Columbia Law School", "University of Sydney Law School", "NLIU Bhopal"],
+    courses: ["LLB or JD", "Company Law", "Corporate Governance Certification"]
+  },
+  //design
+  //high school
+   "Sketch Artist": {
+    description: "Sketch Artists create hand-drawn illustrations or concept art for various media, including fashion, advertising, and entertainment.",
+    cost: "Free to $2,000 for short courses or art supplies.",
+    years: "No formal education required; short courses optional.",
+    experience: "Beginner-friendly; a strong portfolio helps.",
+    skills: ["Drawing", "Creativity", "Attention to Detail", "Visual Communication"],
+    colleges: ["Local Art Centers", "Online Platforms (Domestika, Skillshare)"],
+    courses: ["Introduction to Drawing", "Figure Sketching", "Pencil Art Techniques"]
+  },
+  "DIY Product Creator": {
+    description: "DIY Creators design and make handmade crafts or functional products, often for online sale or exhibitions.",
+    cost: "$100 - $1,000 for tools, materials, and short training.",
+    years: "No formal education needed; hobby-based or self-taught.",
+    experience: "Beginner level; growing through experimentation.",
+    skills: ["Craftsmanship", "Creativity", "Design Thinking", "Basic Marketing"],
+    colleges: ["Community Workshops", "YouTube", "Udemy"],
+    courses: ["Handmade Product Design", "DIY Home Decor", "Etsy Shop Setup"]
+  },
+  //diploma
+   "UI Designer": {
+    description: "UI Designers focus on the look and feel of software interfaces, ensuring user-friendly and visually appealing layouts.",
+    cost: "$2,000 - $10,000 for diplomas or bootcamps.",
+    years: "1-2 years diploma or certificate program.",
+    experience: "Entry-level roles available with portfolio and practice.",
+    skills: ["Figma", "Color Theory", "Typography", "Design Systems"],
+    colleges: ["General Assembly", "Design Institute of India", "CareerFoundry"],
+    courses: ["Diploma in UI Design", "Certified UI Designer", "Interface Design Essentials"]
+  },
+  "Fashion Illustrator": {
+    description: "Fashion Illustrators sketch clothing designs to communicate fashion concepts visually.",
+    cost: "$3,000 - $12,000 for a diploma program.",
+    years: "1-2 years diploma or certification.",
+    experience: "Some industry experience or fashion knowledge preferred.",
+    skills: ["Fashion Drawing", "Adobe Illustrator", "Creativity", "Trend Awareness"],
+    colleges: ["London College of Fashion", "Parsons School of Design", "NIFT India"],
+    courses: ["Fashion Illustration Diploma", "Apparel Design Basics", "Digital Fashion Drawing"]
+  },
+  //bachelor's degree
+   "Graphic Designer": {
+    description: "Graphic Designers create visual content using typography, images, and layout techniques for branding, ads, and media.",
+    cost: "$20,000 - $50,000 for a Bachelor's degree.",
+    years: "3-4 years Bachelor's degree.",
+    experience: "Internships or freelance projects recommended.",
+    skills: ["Photoshop", "Illustrator", "Typography", "Visual Storytelling"],
+    colleges: ["Rhode Island School of Design", "Savannah College of Art and Design", "NID India"],
+    courses: ["Bachelor of Design in Graphic Design", "BA in Visual Communication"]
+  },
+  "Interior Designer": {
+    description: "Interior Designers plan and design interior spaces to be functional, safe, and aesthetically pleasing.",
+    cost: "$25,000 - $60,000 for a degree.",
+    years: "3-4 years Bachelor's degree.",
+    experience: "Apprenticeship or assistant experience preferred.",
+    skills: ["AutoCAD", "Space Planning", "Color Coordination", "Client Communication"],
+    colleges: ["New York School of Interior Design", "RMIT University", "Pearl Academy"],
+    courses: ["Bachelor in Interior Design", "Interior Space Planning", "3D Design Software Training"]
+  },
+  "Web Designer": {
+    description: "Web Designers create the layout and design of websites, ensuring usability and aesthetic appeal.",
+    cost: "$15,000 - $40,000 for a degree.",
+    years: "3-4 years Bachelor's degree.",
+    experience: "Freelance or portfolio work helpful.",
+    skills: ["HTML/CSS", "Responsive Design", "Figma", "UX Principles"],
+    colleges: ["University of the Arts London", "MIT Institute of Design", "UCLA"],
+    courses: ["B.Des in Web Design", "Frontend Web Design", "UX/UI for Web"]
+  },
+  //master's degree
+  "Design Strategist": {
+    description: "Design Strategists align design with business goals, leading innovation through research and creative processes.",
+    cost: "$30,000 - $70,000 for Master’s programs.",
+    years: "1-2 years Master's degree.",
+    experience: "3+ years in design or consulting preferred.",
+    skills: ["Strategic Thinking", "User Research", "Innovation", "Leadership"],
+    colleges: ["Parsons School of Design", "IIT Institute of Design", "Royal College of Art"],
+    courses: ["MA in Strategic Design", "Design Thinking for Innovation"]
+  },
+  "Creative Director": {
+    description: "Creative Directors oversee the creative vision of a project or brand, managing teams across design, branding, and marketing.",
+    cost: "$35,000 - $80,000 for Master’s degree.",
+    years: "2 years Master's; experience heavily weighted.",
+    experience: "5+ years in design or art direction required.",
+    skills: ["Creative Vision", "Leadership", "Branding", "Project Management"],
+    colleges: ["School of Visual Arts", "SCAD", "Domus Academy"],
+    courses: ["Master in Art Direction", "Creative Leadership Training"]
+  },
+  "UX Manager": {
+    description: "UX Managers lead teams to improve user experiences for digital products, based on research and design strategies.",
+    cost: "$30,000 - $70,000 for Master’s programs.",
+    years: "1-2 years Master's degree.",
+    experience: "3-5 years in UX roles required.",
+    skills: ["User Research", "Team Management", "UX Strategy", "Product Thinking"],
+    colleges: ["University of Washington", "RCA London", "University of Toronto"],
+    courses: ["Master of UX Design", "Leadership in UX", "Human-Centered Design"]
+  }
+};
+
+
+    if (!career || !careerDetails[career]) {
+      document.getElementById('career-name').innerText = "Career Not Found";
+      document.getElementById('career-description').innerText = "Sorry, details for this career are not available.";
+    } else {
+      const details = careerDetails[career];
+
+      document.getElementById('career-name').innerText = career;
+      document.getElementById('career-description').innerText = details.description;
+
+      const infoList = document.getElementById('career-info-list');
+      infoList.innerHTML = `
+        <li><span class="label">Estimated Cost:</span> ${details.cost}</li>
+        <li><span class="label">Years Required:</span> ${details.years}</li>
+        <li><span class="label">Experience Needed:</span> ${details.experience}</li>
+        <li><span class="label">Key Skills:</span> ${details.skills.join(', ')}</li>
+      `;
+
+      const collegesList = document.getElementById('colleges-list');
+      collegesList.innerHTML = details.colleges.map(college => `<li>${college}</li>`).join('');
+
+      const coursesList = document.getElementById('courses-list');
+      coursesList.innerHTML = details.courses.map(course => `<li>${course}</li>`).join('');
+    }
+    
+
+  //  document.getElementById("downloadBtn").addEventListener("click", () => {
+  //   const element = document.getElementById("result-section");
+  //   if (!element) {
+  //     alert("Error: Could not find the result section to capture.");
+  //     return;
+  //   }
+
+  //   const opt = {
+  //     margin:       0.5,
+  //     filename:     'career-details.pdf',
+  //     image:        { type: 'jpeg', quality: 0.98 },
+  //     html2canvas:  { scale: 2 },
+  //     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  //   };
+
+  //   html2pdf().set(opt).from(element).save();
+  // });
+
+//   document.getElementById("downloadBtn").addEventListener("click", () => {
+//   const element = document.getElementById("result-section");
+//   if (!element) {
+//     alert("Error: Could not find the result section to capture.");
+//     return;
+//   }
+
+//   const elementWidth = element.offsetWidth;
+//   const elementHeight = element.offsetHeight;
+
+//   const opt = {
+//     margin: 0,
+//     filename: 'career-details.pdf',
+//     image: { type: 'jpeg', quality: 0.98 },
+//     html2canvas: { scale: 2 },
+//     jsPDF: { unit: 'px', format: [elementWidth, elementHeight], orientation: 'portrait' }
+//   };
+
+//   html2pdf().set(opt).from(element).save();
+// });
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const element = document.getElementById("pdf-container"); // wrap container, not result-section
+  if (!element) {
+    alert("Error: Could not find the container to capture.");
+    return;
+  }
+
+  const opt = {
+    margin: [0, 0, 0, 0], // top, right, bottom, left margins = 0
+    filename: 'career-details.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, logging: true, dpi: 300, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().set(opt).from(element).save();
+});
+
+
+
+  </script>
+</body>
+</html>

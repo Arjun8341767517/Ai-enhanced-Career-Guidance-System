@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Career Guidance</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    // Redirect to login page if not logged in
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Career Guidance</h1>
+    <form id="career-form" onsubmit="handleSubmit(event)">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="interest">Select Your Interest:</label>
+      <select id="interest" required>
+        <option value="">--Choose--</option>
+        <option value="Technology">Technology</option>
+        <option value="Health">Health</option>
+        <option value="Art">Art</option>
+        <option value="Business">Business</option>
+        <option value="Law">Law</option>
+        <option value="Design">Design</option>
+      </select>
+
+      <label for="education">Select Your Education Level:</label>
+      <select id="education" required>
+        <option value="">--Choose--</option>
+        <option value="High School">High School</option>
+        <option value="Diploma">Diploma</option>
+        <option value="Bachelor's Degree">Bachelor's Degree</option>
+        <option value="Master's Degree">Master's Degree</option>
+      </select>
+
+      <button type="submit">Get Career Suggestions</button>
+    </form>
+
+    <!-- Career Suggestions will appear here -->
+    <div id="career-suggestions" class="card-container" style="margin-top: 30px;"></div>
+
+    <!-- <div style="margin-top: 30px; text-align: center;">
+      <button onclick="logout()">Logout</button>
+    </div> -->
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.setItem("isLoggedIn", "false");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
